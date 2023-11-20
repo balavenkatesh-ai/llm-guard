@@ -146,6 +146,7 @@ try:
         if submitted:
             results = {}
             st_output_text = run_llama_model(st_prompt_text,component_name,component_version)
+            enabled_scanners, settings = init_output_settings()
             st_result_text, results = scan_output(
                 vault, enabled_scanners, settings, st_prompt_text, st_output_text, st_fail_fast
             )
@@ -155,6 +156,7 @@ try:
     with st.form("prompt_form", clear_on_submit=False):
         submitted = st.form_submit_button("Scan Prompt Input")
         if submitted:
+            enabled_scanners, settings = init_prompt_settings()
             st_result_text, results = scan_prompt(
                     vault, enabled_scanners, settings, st_prompt_text, st_fail_fast)
             st_is_valid = all(item["is_valid"] for item in results)
