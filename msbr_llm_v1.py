@@ -64,9 +64,9 @@ def run_llama_model(template):
 
     llm_chain = LLMChain(prompt=prompt, llm=llm)
 
-    chain_input = {}
+    #chain_input = {}
 
-    response = llm_chain.run(chain_input)
+    response = llm_chain.run()
     st.write("Generated MSBR LLM Threat Report:")
 
     st.markdown(response)
