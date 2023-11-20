@@ -14,10 +14,10 @@ def llama_model_path():
     model_basename = "llama-2-13b-chat.ggmlv3.q5_1.bin"
 
     if os.path.exists(model_basename):
-        st.write("Using locally available model...")
+        #st.write("Using locally available model...")
         model_path = model_basename
     else:
-        st.write("Downloading model...")
+        #st.write("Downloading model...")
         model_path = hf_hub_download(repo_id=model_name_or_path, filename=model_basename)
         
     return model_path
@@ -76,3 +76,4 @@ def run_llama_model(template,component_name,component_version):
 
         st.markdown(response)
         #st.write(response)
+    return response

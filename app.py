@@ -124,6 +124,9 @@ elif scanner_type == OUTPUT:
     st_prompt_text = col1.text_area(
         label="Enter prompt", value=prompt_example_text, height=300, key="prompt_text_input"
     )
+    
+    component_name = st.text_input("Enter your Threat Component Name:")
+    component_version = st.text_input("Enter your Threat Component Version:")
 
     st_output_example = col2.selectbox("Select output example", output_examples, index=0)
 
@@ -143,22 +146,20 @@ try:
         if submitted:
             results = {}
 
-            if scanner_type == PROMPT:
-                st_result_text, results = scan_prompt(
-                    vault, enabled_scanners, settings, st_prompt_text, st_fail_fast
-                )
-                st_is_valid = all(item["is_valid"] for item in results)
-                show_scanning_report(st_is_valid,st_result_text,results)
-                run_llama_model(st_prompt_text,component_name,component_version)
-            elif scanner_type == OUTPUT:
-                st_result_text, results = scan_output(
-                    vault, enabled_scanners, settings, st_prompt_text, st_output_text, st_fail_fast
-                )
-                st_is_valid = all(item["is_valid"] for item in results)
-                show_scanning_report(st_is_valid,st_result_text,results)
+            #if scanner_type == PROMPT:
+                # st_result_text, results = scan_prompt(
+                #     vault, enabled_scanners, settings, st_prompt_text, st_fail_fast
+                # )
+                # st_is_valid = all(item["is_valid"] for item in results)
+                # show_scanning_report(st_is_valid,st_result_text,results)
+            st_output_text = run_llama_model(st_prompt_text,component_name,component_version)
+            st_result_text, results = scan_output(
+                vault, enabled_scanners, settings, st_prompt_text, st_output_text, st_fail_fast
+            )
+            st_is_valid = all(item["is_valid"] for item in results)
+            show_scanning_report(st_is_valid,st_result_text,results)
 
-            # st_is_valid = all(item["is_valid"] for item in results)
-            # st_analysis = results
+
 
 except Exception as e:
     logger.error(e)
