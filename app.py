@@ -128,13 +128,13 @@ elif scanner_type == OUTPUT:
     component_name = st.text_input("Enter your Threat Component Name:")
     component_version = st.text_input("Enter your Threat Component Version:")
 
-    st_output_example = col2.selectbox("Select output example", output_examples, index=0)
+    # st_output_example = col2.selectbox("Select output example", output_examples, index=0)
 
-    with open(os.path.join(output_examples_folder, st_output_example), "r") as file:
-        output_example_text = file.read()
-    st_output_text = col2.text_area(
-        label="Enter output", value=output_example_text, height=300, key="output_text_input"
-    )
+    # with open(os.path.join(output_examples_folder, st_output_example), "r") as file:
+    #     output_example_text = file.read()
+    # st_output_text = col2.text_area(
+    #     label="Enter output", value=output_example_text, height=300, key="output_text_input"
+    # )
 
 st_result_text = None
 st_analysis = None
@@ -142,23 +142,17 @@ st_is_valid = None
 
 try:
     with st.form("text_form", clear_on_submit=False):
-        submitted = st.form_submit_button("Scan prompt and Model response")
+        submitted = st.form_submit_button("Scan Model Response")
         if submitted:
             results = {}
-
-            #if scanner_type == PROMPT:
-                # st_result_text, results = scan_prompt(
-                #     vault, enabled_scanners, settings, st_prompt_text, st_fail_fast
-                # )
-                # st_is_valid = all(item["is_valid"] for item in results)
-                # show_scanning_report(st_is_valid,st_result_text,results)
             st_output_text = run_llama_model(st_prompt_text,component_name,component_version)
             st_result_text, results = scan_output(
                 vault, enabled_scanners, settings, st_prompt_text, st_output_text, st_fail_fast
             )
             st_is_valid = all(item["is_valid"] for item in results)
             show_scanning_report(st_is_valid,st_result_text,results)
-
+            
+    with st.form("text_form", clear_on_submit=False):
         submitted = st.form_submit_button("Scan Prompt Input")
         if submitted:
             st_result_text, results = scan_prompt(
