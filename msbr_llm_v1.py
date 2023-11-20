@@ -25,7 +25,7 @@ def llama_model_path():
 
 def run_llama_model(template,component_name,component_version):
     st.write("Running Llama Model...")
-    with st.spinner("Generating..."):
+    with st.spinner("Generating Model Output..."):
         response_placeholder = st.empty()
 
         # template = """SYSTEM: As a cyber security expert, your task is to prepare a list of 20 threats.

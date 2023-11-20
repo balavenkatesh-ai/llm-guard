@@ -76,7 +76,7 @@ elif scanner_type == OUTPUT:
 add_google_analytics("G-0HBVNHEZBW")
 
 # Main pannel
-st.subheader("Guard Prompt" if scanner_type == PROMPT else "Guard Output")
+st.subheader("MSBR Model Prompt" if scanner_type == PROMPT else "MSBR Llama Output")
 
 analyzer_load_state = st.info("Starting LLM Guard...")
 
