@@ -1,0 +1,24 @@
+To switch between different examples in your Streamlit app where the content is loaded from different text files within the same folder, you can use a select box to allow the user to choose the example they want to display.
+
+```python
+import streamlit as st
+import os
+
+# Assuming your text files are in the 'examples' folder
+examples_folder = 'examples'
+
+# Get a list of text files
+example_files = [f for f in os.listdir(examples_folder) if f.endswith('.txt')]
+
+# Function to read file content
+def get_file_content(filename):
+    with open(os.path.join(examples_folder, filename), 'r') as file:
+        return file.read()
+
+# Selection box for the user to choose an example
+selected_file = st.selectbox('Choose an example', example_files)
+
+# Display the content of the selected file in a text_area
+file_content = get_file_content(selected_file)
+st.text_area('File content', file_content, height=300)
+```
