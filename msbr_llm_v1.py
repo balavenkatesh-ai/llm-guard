@@ -24,53 +24,55 @@ def llama_model_path():
 
 
 def run_llama_model(template,component_name,component_version):
-    response_placeholder = st.empty()
+    st.write("Running Llama Model...")
+    with st.spinner("Generating..."):
+        response_placeholder = st.empty()
 
-    # template = """SYSTEM: As a cyber security expert, your task is to prepare a list of 20 threats.
-    # USER: Please provide Threat Names, Attack Domains, Threat Descriptions, Countermeasures, CAPEC Reference URLs, and References for the {component_name} component, version {component_version}.
+        # template = """SYSTEM: As a cyber security expert, your task is to prepare a list of 20 threats.
+        # USER: Please provide Threat Names, Attack Domains, Threat Descriptions, Countermeasures, CAPEC Reference URLs, and References for the {component_name} component, version {component_version}.
 
-    # To structure your data, follow these guidelines:
+        # To structure your data, follow these guidelines:
 
-    # 1. Threat Name: A descriptive name for each potential threat (e.g., Data Manipulation).
-    # 2. Attack Domain: Specify the category of attack, such as network or application.
-    # 3. Threat Description: Offer a concise explanation of the potential attack. For example, describe how attackers can manipulate data in MongoDB due to improper access controls or vulnerabilities in the application using the database.
-    # 4. Countermeasure: Suggest recommendations to mitigate each threat.
-    # 5. CAPEC Reference URL: Include the URL of the CAPEC (Common Attack Pattern Enumeration and Classification) database for each threat, linking to its CAPEC page.
-    # 6. References: Provide reference source names or URLs to verify the accuracy of the threat information provided.
+        # 1. Threat Name: A descriptive name for each potential threat (e.g., Data Manipulation).
+        # 2. Attack Domain: Specify the category of attack, such as network or application.
+        # 3. Threat Description: Offer a concise explanation of the potential attack. For example, describe how attackers can manipulate data in MongoDB due to improper access controls or vulnerabilities in the application using the database.
+        # 4. Countermeasure: Suggest recommendations to mitigate each threat.
+        # 5. CAPEC Reference URL: Include the URL of the CAPEC (Common Attack Pattern Enumeration and Classification) database for each threat, linking to its CAPEC page.
+        # 6. References: Provide reference source names or URLs to verify the accuracy of the threat information provided.
 
-    # Output: Format the data in Markdown with appropriate headings and tables.
+        # Output: Format the data in Markdown with appropriate headings and tables.
 
-    # ASSISTANT: 
-    # """
-                
-    prompt = PromptTemplate(template=template, input_variables=["component_name","component_version"])
+        # ASSISTANT: 
+        # """
+                    
+        prompt = PromptTemplate(template=template, input_variables=["component_name","component_version"])
 
-    callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
+        callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
 
-    n_gpu_layers = 40
-    n_batch = 512
+        n_gpu_layers = 40
+        n_batch = 512
 
-    llm = LlamaCpp(
-        model_path=llama_model_path(),
-        max_tokens=2024,
-        n_gpu_layers=n_gpu_layers,
-        n_batch=n_batch,
-        callback_manager=callback_manager,
-        verbose=True,
-        n_ctx=4096,
-        stop=['USER:'],
-        temperature=0.2,
-    )
+        llm = LlamaCpp(
+            model_path=llama_model_path(),
+            max_tokens=2024,
+            n_gpu_layers=n_gpu_layers,
+            n_batch=n_batch,
+            callback_manager=callback_manager,
+            verbose=True,
+            n_ctx=4096,
+            stop=['USER:'],
+            temperature=0.2,
+        )
 
-    llm_chain = LLMChain(prompt=prompt, llm=llm)
+        llm_chain = LLMChain(prompt=prompt, llm=llm)
 
-    chain_input = {
-            'component_name': component_name,
-            'component_version': component_version
-            }
+        chain_input = {
+                'component_name': component_name,
+                'component_version': component_version
+                }
 
-    response = llm_chain.run(chain_input)
-    st.write("Generated MSBR LLM Threat Report:")
+        response = llm_chain.run(chain_input)
+        st.write("Generated MSBR LLM Threat Report:")
 
-    st.markdown(response)
-    #st.write(response)
+        st.markdown(response)
+        #st.write(response)

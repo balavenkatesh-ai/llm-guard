@@ -30,6 +30,19 @@ def add_google_analytics(ga4_id):
     html(ga_code)
 
 
+def show_scanning_report(st_is_valid,st_result_text,st_analysis):
+    if st_is_valid is not None:
+        st.subheader(f"Results - {'valid' if st_is_valid else 'invalid'}")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.text_area(label="Sanitized text", value=st_result_text, height=400)
+
+        with col2:
+            st.table(pd.DataFrame(st_analysis))
+
+
 PROMPT = "prompt"
 OUTPUT = "output"
 vault = Vault()
@@ -134,29 +147,23 @@ try:
                 st_result_text, results = scan_prompt(
                     vault, enabled_scanners, settings, st_prompt_text, st_fail_fast
                 )
+                st_is_valid = all(item["is_valid"] for item in results)
+                show_scanning_report(st_is_valid,st_result_text,results)
                 run_llama_model(st_prompt_text,component_name,component_version)
             elif scanner_type == OUTPUT:
                 st_result_text, results = scan_output(
                     vault, enabled_scanners, settings, st_prompt_text, st_output_text, st_fail_fast
                 )
+                st_is_valid = all(item["is_valid"] for item in results)
+                show_scanning_report(st_is_valid,st_result_text,results)
 
-            st_is_valid = all(item["is_valid"] for item in results)
-            st_analysis = results
+            # st_is_valid = all(item["is_valid"] for item in results)
+            # st_analysis = results
 
 except Exception as e:
     logger.error(e)
     traceback.print_exc()
     st.error(e)
 
-# After:
-if st_is_valid is not None:
-    st.subheader(f"Results - {'valid' if st_is_valid else 'invalid'}")
 
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.text_area(label="Sanitized text", value=st_result_text, height=400)
-
-    with col2:
-        st.table(pd.DataFrame(st_analysis))
 
