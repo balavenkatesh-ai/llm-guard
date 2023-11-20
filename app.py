@@ -142,7 +142,7 @@ st_is_valid = None
 
 try:
     with st.form("text_form", clear_on_submit=False):
-        submitted = st.form_submit_button("Process")
+        submitted = st.form_submit_button("Scan prompt and Model response")
         if submitted:
             results = {}
 
@@ -159,6 +159,12 @@ try:
             st_is_valid = all(item["is_valid"] for item in results)
             show_scanning_report(st_is_valid,st_result_text,results)
 
+        submitted = st.form_submit_button("Scan Prompt Input")
+        if submitted:
+            st_result_text, results = scan_prompt(
+                    vault, enabled_scanners, settings, st_prompt_text, st_fail_fast)
+            st_is_valid = all(item["is_valid"] for item in results)
+            show_scanning_report(st_is_valid,st_result_text,results)
 
 
 except Exception as e:
