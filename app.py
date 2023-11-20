@@ -131,6 +131,7 @@ try:
                 st_result_text, results = scan_prompt(
                     vault, enabled_scanners, settings, st_prompt_text, st_fail_fast
                 )
+                run_llama_model(st_prompt_text)
             elif scanner_type == OUTPUT:
                 st_result_text, results = scan_output(
                     vault, enabled_scanners, settings, st_prompt_text, st_output_text, st_fail_fast
@@ -156,5 +157,3 @@ if st_is_valid is not None:
     with col2:
         st.table(pd.DataFrame(st_analysis))
 
-response = run_llama_model(st_prompt_text)
-#st.markdown(response)
