@@ -23,7 +23,7 @@ def llama_model_path():
     return model_path
 
 
-def run_llama_model(template):
+def run_llama_model(template,component_name,component_version):
     response_placeholder = st.empty()
 
     # template = """SYSTEM: As a cyber security expert, your task is to prepare a list of 20 threats.
@@ -43,7 +43,7 @@ def run_llama_model(template):
     # ASSISTANT: 
     # """
                 
-    prompt = PromptTemplate(template=template)
+    prompt = PromptTemplate(template=template, input_variables=["component_name","component_version"])
 
     callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
 
@@ -64,9 +64,12 @@ def run_llama_model(template):
 
     llm_chain = LLMChain(prompt=prompt, llm=llm)
 
-    #chain_input = {}
+    chain_input = {
+            'component_name': component_name,
+            'component_version': component_version
+            }
 
-    response = llm_chain.run()
+    response = llm_chain.run(chain_input)
     st.write("Generated MSBR LLM Threat Report:")
 
     st.markdown(response)

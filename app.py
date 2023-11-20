@@ -97,6 +97,9 @@ if scanner_type == PROMPT:
         label="Enter prompt", value=prompt_example_text, height=200, key="prompt_text_input"
     )
     
+    component_name = st.text_input("Enter your Threat Component Name:")
+    component_version = st.text_input("Enter your Threat Component Version:")
+    
 elif scanner_type == OUTPUT:
     col1, col2 = st.columns(2)
 
@@ -131,7 +134,7 @@ try:
                 st_result_text, results = scan_prompt(
                     vault, enabled_scanners, settings, st_prompt_text, st_fail_fast
                 )
-                run_llama_model(st_prompt_text)
+                run_llama_model(st_prompt_text,component_name,component_version)
             elif scanner_type == OUTPUT:
                 st_result_text, results = scan_output(
                     vault, enabled_scanners, settings, st_prompt_text, st_output_text, st_fail_fast
