@@ -1,5 +1,5 @@
 SYSTEM: As a cyber security expert, your task is to prepare a list of 20 threats.
-USER: Please provide Threat Names, Attack Domains, Threat Descriptions, Countermeasures, CAPEC Reference URLs, and References for the {} component, version {}.
+USER: Please provide Threat Names, Attack Domains, Threat Descriptions, Countermeasures, CAPEC Reference URLs, and References for the {component_name} component, version {component_version}.
 
 To structure your data, follow these guidelines:
 
