@@ -141,7 +141,7 @@ st_analysis = None
 st_is_valid = None
 
 try:
-    with st.form("text_form", clear_on_submit=False):
+    with st.form("output_form", clear_on_submit=False):
         submitted = st.form_submit_button("Scan Model Response")
         if submitted:
             results = {}
@@ -152,7 +152,7 @@ try:
             st_is_valid = all(item["is_valid"] for item in results)
             show_scanning_report(st_is_valid,st_result_text,results)
             
-    with st.form("text_form", clear_on_submit=False):
+    with st.form("prompt_form", clear_on_submit=False):
         submitted = st.form_submit_button("Scan Prompt Input")
         if submitted:
             st_result_text, results = scan_prompt(
