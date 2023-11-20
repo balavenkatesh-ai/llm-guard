@@ -77,18 +77,6 @@ add_google_analytics("G-0HBVNHEZBW")
 
 # Main pannel
 st.subheader("Guard Prompt" if scanner_type == PROMPT else "Guard Output")
-with st.expander("About", expanded=False):
-    st.info(
-        """LLM-Guard is a comprehensive tool designed to fortify the security of Large Language Models (LLMs).
-        \n\n[Code](https://github.com/laiyer-ai/llm-guard) |
-        [Documentation](https://laiyer-ai.github.io/llm-guard/)"""
-    )
-
-    st.markdown(
-        "[![Pypi Downloads](https://img.shields.io/pypi/dm/llm-guard.svg)](https://img.shields.io/pypi/dm/llm-guard.svg)"  # noqa
-        "[![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)"
-        "![GitHub Repo stars](https://img.shields.io/github/stars/laiyer-ai/llm-guard?style=social)"
-    )
 
 analyzer_load_state = st.info("Starting LLM Guard...")
 
@@ -141,26 +129,25 @@ st_analysis = None
 st_is_valid = None
 
 try:
-    with st.form("output_form", clear_on_submit=False):
-        submitted = st.form_submit_button("Scan Model Response")
-        if submitted:
-            results = {}
-            st_output_text = run_llama_model(st_prompt_text,component_name,component_version)
-            enabled_scanners, settings = init_output_settings()
-            st_result_text, results = scan_output(
-                vault, enabled_scanners, settings, st_prompt_text, st_output_text, st_fail_fast
-            )
-            st_is_valid = all(item["is_valid"] for item in results)
-            show_scanning_report(st_is_valid,st_result_text,results)
-            
-    with st.form("prompt_form", clear_on_submit=False):
-        submitted = st.form_submit_button("Scan Prompt Input")
-        if submitted:
-            enabled_scanners, settings = init_prompt_settings()
-            st_result_text, results = scan_prompt(
-                    vault, enabled_scanners, settings, st_prompt_text, st_fail_fast)
-            st_is_valid = all(item["is_valid"] for item in results)
-            show_scanning_report(st_is_valid,st_result_text,results)
+    if scanner_type == OUTPUT:
+        with st.form("output_form", clear_on_submit=False):
+            submitted = st.form_submit_button("Scan Model Response")
+            if submitted:
+                results = {}
+                st_output_text = run_llama_model(st_prompt_text,component_name,component_version)
+                st_result_text, results = scan_output(
+                    vault, enabled_scanners, settings, st_prompt_text, st_output_text, st_fail_fast
+                )
+                st_is_valid = all(item["is_valid"] for item in results)
+                show_scanning_report(st_is_valid,st_result_text,results)
+    if scanner_type == PROMPT:
+        with st.form("prompt_form", clear_on_submit=False):
+            submitted = st.form_submit_button("Scan Prompt Input")
+            if submitted:
+                st_result_text, results = scan_prompt(
+                        vault, enabled_scanners, settings, st_prompt_text, st_fail_fast)
+                st_is_valid = all(item["is_valid"] for item in results)
+                show_scanning_report(st_is_valid,st_result_text,results)
 
 
 except Exception as e:
